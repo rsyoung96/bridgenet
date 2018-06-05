@@ -191,12 +191,15 @@ def main():
 	################## ground-motion intensity map data #######################
 	#load the earthquake info
 	#just for demonstration, this does ONLY THREE ground-motion intensity maps
-	sa_matrix = util.read_2dlist('input/sample_ground_motion_intensity_map_JUST_THREE.txt',delimiter='\t')
+	#sa_matrix = util.read_2dlist('input/sample_ground_motion_intensity_map_JUST_THREE.txt',delimiter='\t')
 	#this does approx. 2000 ground-motion intensity maps. These are hazard consistent.
 	#sa_matrix = util.read_2dlist('input/sample_ground_motion_intensity_maps_road_only_filtered.txt',delimiter='\t')
+	#GB: this does 25 hazard-consistent maps
+	sa_matrix = util.read_2dlist('input/subset_maps_25.txt', delimiter='\t')
 	lnsas = []
 	magnitudes = []
 	for row in sa_matrix:
+		print row[4:]
 		lnsas.append([log(float(sa)) for sa in row[4:]])
 		magnitudes.append(float(row[2]))
 	print 'You are considering %d ground-motion intensity maps.' % int(len(lnsas))
