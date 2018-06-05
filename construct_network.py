@@ -31,8 +31,9 @@ def intersections(G):
     # Add list of bridges on each road segment
     for b_num in bridges_dict.keys():
         bridge_edges = bridges_dict[b_num]['a_b_pairs_direct']
+        new_id = str(bridges_dict[b_num]['new_id'])
         for [u,v] in bridge_edges:
-            G.edge[str(u)][str(v)]['bridges'].append('b' + b_num)
+            G.edge[str(u)][str(v)]['bridges'].append('b' + new_id)
     intersections_G = G.copy()
     return (intersections_G)
 
@@ -43,21 +44,17 @@ def intersections_and_bridges(G):
 #@G is the intersections_G processed in previous function
     for (u,v) in G.edges():
         if len(G.edge[u][v]['bridges']) > 0:
-            end1 = u
-            end2 = v
             bridge_list = G.edge[u][v]['bridges']
             for bridge in bridge_list:
-                data = G.get_edge_data(end1, end2)
+                data = G.get_edge_data(u, v)
                 data['bridges'] = None
                 data['distance'] = data['distance']/2
                 data['distance_0'] = data['distance_0']/2
                 data['t_0'] = data['t_0']/2
-                G.remove_edge(end1,end2)
                 G.add_node(bridge, nodetype=BRIDGE)
-                G.add_edge(end1, bridge, attr_dict = data)
-                G.add_edge(bridge, end2, attr_dict = data)
-                end1 = u
-                end2 = bridge
+                G.add_edge(u, bridge, attr_dict = data)
+                G.add_edge(bridge, v, attr_dict = data)
+            G.remove_edge(u,v)
     print ('finished adding bridges')
     bridges_and_intersections_G = G.copy()
     return (bridges_and_intersections_G)
